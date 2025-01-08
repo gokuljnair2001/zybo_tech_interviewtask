@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/products_controller.dart';
+import 'package:zybo_tech_interviewtask/view/profile_page/profile_page.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
@@ -28,6 +29,17 @@ class ProductsPage extends StatelessWidget {
             backgroundColor: Colors.white,
             elevation: 0,
             foregroundColor: Colors.black,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(),
+                        ));
+                  },
+                  icon: Icon(Icons.person))
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
