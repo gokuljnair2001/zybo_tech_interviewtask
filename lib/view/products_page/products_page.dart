@@ -12,7 +12,12 @@ class ProductsPage extends StatelessWidget {
     return ViewModelBuilder.reactive(
       onViewModelReady: (viewModel) {
         WidgetsBinding.instance.addPostFrameCallback(
-          (timeStamp) => viewModel.getProductList(),
+          (timeStamp) {
+            viewModel.getProductList();
+          },
+        );
+        WidgetsBinding.instance.addPostFrameCallback(
+          (timeStamp) => viewModel.onBannerProducts(),
         );
       },
       viewModelBuilder: () => ProductsController(),
@@ -31,8 +36,9 @@ class ProductsPage extends StatelessWidget {
               children: [
                 // Carousel Slider
                 CarouselSlider.builder(
-                  itemCount: 3,
+                  itemCount: viewModel.bannerProducts.length,
                   itemBuilder: (context, index, realIndex) {
+                    final bannerProduct = viewModel.bannerProducts[index];
                     return Container(
                       height: 100,
                       width: double.infinity,
@@ -42,7 +48,9 @@ class ProductsPage extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.network(
-                          'https://static.vecteezy.com/system/resources/previews/000/178/364/original/super-sale-offer-and-discount-banner-template-for-marketing-and-vector.jpg',
+                          bannerProduct.product?.images?.isNotEmpty == true
+                              ? bannerProduct.product!.images!.first
+                              : 'https://kerala.mallsmarket.com/sites/default/files/photos/events/LuLuMall-Kochi-LuLuOnSale2015-10-11Jan2015.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -54,23 +62,24 @@ class ProductsPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                const SizedBox(height: 16),
+
+                SizedBox(height: 16),
                 // Title
-                const Text(
+                Text(
                   'Popular Product',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 // Product Grid
                 Expanded(
                   child: viewModel.products.isEmpty
-                      ? const Center(child: CircularProgressIndicator())
+                      ? Center(child: CircularProgressIndicator())
                       : GridView.builder(
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.9,
                             crossAxisSpacing: 8,
