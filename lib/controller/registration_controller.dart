@@ -46,6 +46,8 @@ class RegistrationController extends BaseViewModel {
           String token = data["token"]["access"];
           String userId = data["user_id"];
           String message = data["message"];
+          final pref=await SharedPreferences.getInstance();
+          pref.setString('token', token);
 
           
 

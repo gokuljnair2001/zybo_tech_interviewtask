@@ -1,15 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/products_controller.dart';
+import 'package:zybo_tech_interviewtask/controller/wishlist_controller.dart';
 import 'package:zybo_tech_interviewtask/view/profile_page/profile_page.dart';
+import 'package:zybo_tech_interviewtask/view/search_screen/search_screen.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final prowatch = context.watch<WishlistController>();
+    final proRead = context.read<WishlistController>();
     return ViewModelBuilder.reactive(
       onViewModelReady: (viewModel) {
         WidgetsBinding.instance.addPostFrameCallback(
@@ -21,7 +26,9 @@ class ProductsPage extends StatelessWidget {
           (timeStamp) => viewModel.onBannerProducts(),
         );
       },
-      viewModelBuilder: () => ProductsController(),
+      viewModelBuilder: () {
+        return ProductsController();
+      },
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
@@ -48,21 +55,30 @@ class ProductsPage extends StatelessWidget {
               children: [
                 // Search Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextField(
-                    onChanged: (value) {
-                      // You can implement your search logic here
-                      // For example: viewModel.searchProducts(value);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Search products...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchScreen(),
+                            ));
+                      },
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            Icon(Icons.search),
+                            Text(
+                              'Search...',
+                              style: TextStyle(color: Colors.grey),
+                            )
+                          ],
+                        ),
                       ),
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
+                    )),
                 SizedBox(
                   height: 15,
                 ),
@@ -82,7 +98,8 @@ class ProductsPage extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
-                                bannerProduct.product?.images?.isNotEmpty == true
+                                bannerProduct.product?.images?.isNotEmpty ==
+                                        true
                                     ? bannerProduct.product!.images!.first
                                     : 'https://kerala.mallsmarket.com/sites/default/files/photos/events/LuLuMall-Kochi-LuLuOnSale2015-10-11Jan2015.jpg',
                                 fit: BoxFit.cover,
@@ -143,12 +160,16 @@ class ProductsPage extends StatelessWidget {
                                       right: 8,
                                       child: GestureDetector(
                                         onTap: () {
-                                          // Add logic to add to wishlist
-                                          
+                                          proRead.toggleWishlist(
+                                              productId: viewModel
+                                                  .products[index].id
+                                                  .toString(),
+                                              context: context);
                                         },
-                                        child:  Icon(
-                                          
-                                          Icons.favorite_border,
+                                        child: Icon(
+                                          prowatch.isInWishlist
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
                                           size: 24,
                                           color: Colors.red,
                                         ),

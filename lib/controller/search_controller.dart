@@ -1,41 +1,50 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:stacked/stacked.dart';
-import 'package:zybo_tech_interviewtask/api/apis.dart';
-import 'package:zybo_tech_interviewtask/model/search_model.dart';
 
 class ProductSearchController extends BaseViewModel {
-  List<SearchProductList> searchList = [];
-  bool noResult = false;
+  List<Product> searchList = [];
+  List<Product> originalList = []; 
+  bool isLoading = false;
 
-  Future<void> search({required String keyword, required BuildContext context}) async {
-    try {
-      var response = await http.post(
-        Apis.searchUrl,
-        body: jsonEncode({'query': keyword}),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        final decodedResponse = json.decode(response.body);
-        if (decodedResponse is List) {
-          searchList = searchProductListFromJson(response.body);
-          noResult = searchList.isEmpty;
-        } else if (decodedResponse['message'] == "No products found.") {
-          noResult = true;
-          searchList = [];
-        }
-      } else {
-        noResult = true;
-        searchList = [];
-      }
-      notifyListeners();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e.toString()),
-        backgroundColor: Colors.red,
-      ));
-    }
+  ProductSearchController() {
+    
+    originalList = [
+      Product(name: 'Product 1', price: 100, isActive: true),
+      Product(name: 'Product 2', price: 200, isActive: false),
+    ];
+    searchList = originalList;
   }
+
+  void search({required String keyword, required BuildContext context}) async {
+    if (keyword.isEmpty) {
+      searchList = originalList;
+      notifyListeners();
+      return;
+    }
+
+    
+    isLoading = true;
+    notifyListeners();
+
+    
+    await Future.delayed(const Duration(seconds: 1));
+
+    
+    searchList = originalList
+        .where((product) =>
+            product.name!.toLowerCase().contains(keyword.toLowerCase()))
+        .toList();
+
+    
+    isLoading = false;
+    notifyListeners();
+  }
+}
+
+class Product {
+  final String? name;
+  final int price;
+  final bool? isActive;
+
+  Product({this.name, required this.price, this.isActive});
 }

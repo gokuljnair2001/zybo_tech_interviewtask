@@ -60,7 +60,7 @@ class NamePage extends StatelessWidget {
                           // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(res!.message.toString())));
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             // ignore: use_build_context_synchronously
                             context,
                             MaterialPageRoute(

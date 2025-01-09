@@ -7,40 +7,88 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(viewModelBuilder: () => ProductSearchController(), builder: (context, viewModel, child) => Scaffold(
-      appBar: AppBar(title: Text('Search'),),
+    final controller = TextEditingController();
 
-      body:viewModel.noResult?Center(child: Text('No results Found'),): ListView.builder(itemBuilder:(context, index) =>  ListTile(
-title: Text(viewModel.searchList[index].name??'Name not available'),
-subtitle: Text(viewModel.searchList[index].price.toString(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),),
-trailing: Builder(builder: (context) {
-  if (viewModel.searchList[index].isActive??true) 
-  {
+    return ViewModelBuilder<ProductSearchController>.reactive(
+      viewModelBuilder: () => ProductSearchController(),
+      builder: (context, viewModel, child) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Search'),
+        ),
+        body: Column(
+          children: [
+            // Search TextField
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: TextField(
+                controller: controller,
+                onChanged: (value) {
+                  viewModel.search(keyword: controller.text, context: context);
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search products...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                ),
+              ),
+            ),
 
-    return Container(
-      decoration: BoxDecoration(color: Colors.green[200],borderRadius: BorderRadius.circular(9)),
-      child: Padding(padding: 
-      EdgeInsets.symmetric(horizontal: 5),
-      
-      child: Text('active',style: TextStyle(color: Colors.white),),
+            // Display loading indicator or search results
+            Expanded(
+              child: viewModel.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : viewModel.searchList.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No products found',
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: viewModel.searchList.length,
+                          itemBuilder: (context, index) {
+                            final product = viewModel.searchList[index];
+                            return ListTile(
+                              title: Text(product.name ?? 'Name not available'),
+                              subtitle: Text(
+                                product.price.toString(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              trailing: Container(
+                                decoration: BoxDecoration(
+                                  color: (product.isActive ?? false)
+                                      ? Colors.green[200]
+                                      : Colors.red[200],
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(
+                                    (product.isActive ?? false)
+                                        ? 'Active'
+                                        : 'Not active',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
-    
-  }
-  else{
-        return Container(
-      decoration: BoxDecoration(color: Colors.red[200],borderRadius: BorderRadius.circular(9)),
-      child: Padding(padding: 
-      EdgeInsets.symmetric(horizontal: 5),
-      
-      child: Text('Not active',style: TextStyle(color: Colors.white),),
-      ),
-    );
-  }
-},),
-),
-
-      ) 
-    ) );
   }
 }
