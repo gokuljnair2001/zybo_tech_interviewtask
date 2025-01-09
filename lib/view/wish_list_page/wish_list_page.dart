@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:stacked/stacked.dart';
+import 'package:zybo_tech_interviewtask/controller/wishlist_controller.dart';
 
 class WishListPage extends StatelessWidget {
   const WishListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ViewModelBuilder.reactive(viewModelBuilder: () => WishlistController(), builder: (context, viewModel, child) => Scaffold(
       appBar: AppBar(
         title: Text(
           'WishList',
@@ -98,6 +100,6 @@ class WishListPage extends StatelessWidget {
           );
         },
       ),
-    );
+    ));
   }
 }

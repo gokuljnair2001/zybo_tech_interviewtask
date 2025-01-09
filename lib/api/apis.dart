@@ -14,5 +14,7 @@ class Apis {
     static   Uri searchUrl=
       Uri.parse('https://admin.kushinirestaurant.com/api/search/');
     static   Uri wishList=
-      Uri.parse(': https://admin.kushinirestaurant.com/api/wishlist/');
+      Uri.parse('https://admin.kushinirestaurant.com/api/add-remove-wishlist/');
+    static   Uri getwishList=
+      Uri.parse('https://admin.kushinirestaurant.com/api/wishlist/');
 }

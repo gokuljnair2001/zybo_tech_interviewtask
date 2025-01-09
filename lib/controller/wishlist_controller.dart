@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/api/apis.dart';
 
 class WishlistController extends ChangeNotifier {
@@ -42,9 +40,11 @@ class WishlistController extends ChangeNotifier {
 
         if (responseData['message'] == 'Product added to favorites') {
           isInWishlist = true;
+          notifyListeners();
         } else if (responseData['message'] ==
             'Product removed from favorites') {
           isInWishlist = false;
+          notifyListeners();
         }
 
         notifyListeners();
@@ -61,5 +61,17 @@ class WishlistController extends ChangeNotifier {
         );
       }
     }
+  }
+
+
+  Future<void> getWishList() async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+    var response=http.get(Apis.getwishList,headers:{
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }, );
+
+        
   }
 }
