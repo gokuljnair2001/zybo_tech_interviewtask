@@ -32,7 +32,7 @@ class ProductsPage extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Popular Product'),
+            title: Text('Popular Product'),
             backgroundColor: Colors.white,
             elevation: 0,
             foregroundColor: Colors.black,

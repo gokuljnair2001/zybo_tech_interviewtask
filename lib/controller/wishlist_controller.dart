@@ -63,15 +63,20 @@ class WishlistController extends ChangeNotifier {
     }
   }
 
-
   Future<void> getWishList() async {
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString('token');
-    var response=http.get(Apis.getwishList,headers:{
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        }, );
-
-        
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    var response = await http.get(
+      Apis.getwishList,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      log(response.body);
+    } else {
+      log(response.statusCode.toString());
+    }
   }
 }

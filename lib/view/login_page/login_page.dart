@@ -80,7 +80,6 @@ class LogIn extends StatelessWidget {
                           onPressed: () async {
                             // if (key.currentState!.validate()) {
                             // }
-                            // Add button action here
                             try {
                               var res = await viewModel.createUser(
                                   phonenum: controller.text);
