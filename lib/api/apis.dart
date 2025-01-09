@@ -10,4 +10,6 @@ class Apis {
 
   static Uri userData =
       Uri.parse('https://admin.kushinirestaurant.com/api/user-data');
+      static Uri searchUrl=
+      Uri.parse('https://admin.kushinirestaurant.com/api/search/query=your_search_term');
 }

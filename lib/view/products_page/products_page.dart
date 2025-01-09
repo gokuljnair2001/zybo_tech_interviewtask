@@ -46,35 +46,56 @@ class ProductsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Carousel Slider
-                CarouselSlider.builder(
-                  itemCount: viewModel.bannerProducts.length,
-                  itemBuilder: (context, index, realIndex) {
-                    final bannerProduct = viewModel.bannerProducts[index];
-                    return Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    onChanged: (value) {
+                      // You can implement your search logic here
+                      // For example: viewModel.searchProducts(value);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search products...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          bannerProduct.product?.images?.isNotEmpty == true
-                              ? bannerProduct.product!.images!.first
-                              : 'https://kerala.mallsmarket.com/sites/default/files/photos/events/LuLuMall-Kochi-LuLuOnSale2015-10-11Jan2015.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                  options: CarouselOptions(
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    height: 250,
+                      prefixIcon: Icon(Icons.search),
+                    ),
                   ),
                 ),
-
+                SizedBox(
+                  height: 15,
+                ),
+                // Check if the bannerProducts is empty or loading
+                viewModel.bannerProducts.isEmpty
+                    ? Center(child: CircularProgressIndicator())
+                    : CarouselSlider.builder(
+                        itemCount: viewModel.bannerProducts.length,
+                        itemBuilder: (context, index, realIndex) {
+                          final bannerProduct = viewModel.bannerProducts[index];
+                          return Container(
+                            height: 100,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                bannerProduct.product?.images?.isNotEmpty == true
+                                    ? bannerProduct.product!.images!.first
+                                    : 'https://kerala.mallsmarket.com/sites/default/files/photos/events/LuLuMall-Kochi-LuLuOnSale2015-10-11Jan2015.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          autoPlay: true,
+                          height: 250,
+                        ),
+                      ),
                 SizedBox(height: 16),
                 // Title
                 Text(
@@ -123,9 +144,10 @@ class ProductsPage extends StatelessWidget {
                                       child: GestureDetector(
                                         onTap: () {
                                           // Add logic to add to wishlist
-                                          print('Added to wishlist');
+                                          
                                         },
-                                        child: const Icon(
+                                        child:  Icon(
+                                          
                                           Icons.favorite_border,
                                           size: 24,
                                           color: Colors.red,

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/registration_controller.dart';
+import 'package:zybo_tech_interviewtask/view/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:zybo_tech_interviewtask/view/products_page/products_page.dart';
 
 class NamePage extends StatelessWidget {
@@ -63,7 +64,7 @@ class NamePage extends StatelessWidget {
                             // ignore: use_build_context_synchronously
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductsPage(),
+                              builder: (context) => BottomNavBar(),
                             ),
                           );
                         } catch (e) {
