@@ -47,6 +47,8 @@ class RegistrationController extends BaseViewModel {
           String userId = data["user_id"];
           String message = data["message"];
 
+          
+
           log("Token: $token");
           log("User ID: $userId");
 

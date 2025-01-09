@@ -1,4 +1,5 @@
 class Apis {
+
   static Uri registration =
       Uri.parse('https://admin.kushinirestaurant.com/api/verify/');
   static Uri loginwithname =
@@ -10,6 +11,8 @@ class Apis {
 
   static Uri userData =
       Uri.parse('https://admin.kushinirestaurant.com/api/user-data');
-      static Uri searchUrl=
-      Uri.parse('https://admin.kushinirestaurant.com/api/search/query=your_search_term');
+    static   Uri searchUrl=
+      Uri.parse('https://admin.kushinirestaurant.com/api/search/');
+    static   Uri wishList=
+      Uri.parse(': https://admin.kushinirestaurant.com/api/wishlist/');
 }
