@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/profile_controller.dart';
-import 'package:zybo_tech_interviewtask/controller/registration_controller.dart';
 import 'package:zybo_tech_interviewtask/utils/constants/string_constants.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -13,9 +10,19 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late String name;
+    late String number;
+
     return ViewModelBuilder.reactive(
       onModelReady: (viewModel) {
         viewModel.getData(context: context);
+        WidgetsBinding.instance.addPostFrameCallback(
+          (timeStamp) async {
+            final preff = await SharedPreferences.getInstance();
+            name = preff.getString(StringConstants.name).toString();
+            number = preff.getString(StringConstants.phoneNumber).toString();
+          },
+        );
       },
       viewModelBuilder: () => ProfileController(),
       builder: (context, viewModel, child) {
@@ -44,14 +51,25 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  viewModel.profileResponse!.name ?? 'No Name',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
+                Builder(builder: (context) {
+                  if (viewModel.noData) {
+                    return Text(name,
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ));
+                  } else {
+                    return Text(
+                      viewModel.profileResponse?.name ?? 'No Name',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    );
+                  }
+                }),
                 const SizedBox(height: 24),
                 const Text(
                   'Phone',
@@ -62,18 +80,30 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  viewModel.profileResponse!.phoneNumber ?? 'No Number',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
+                Builder(builder: (context) {
+                  if (viewModel.noData) {
+                    return Text(
+                      number,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    );
+                  } else {
+                    return Text(
+                      viewModel.profileResponse?.phoneNumber ?? 'No Number',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    );
+                  }
+                }),
               ],
             ),
           ),
-     
         );
       },
     );

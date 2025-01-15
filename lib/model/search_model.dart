@@ -1,37 +1,95 @@
-// To parse this JSON data, do
-//
-//     final searchProductList = searchProductListFromJson(jsonString);
+
 
 import 'dart:convert';
 
-List<SearchProductList> searchProductListFromJson(String str) => List<SearchProductList>.from(json.decode(str).map((x) => SearchProductList.fromJson(x)));
+List<SearchResults> searchResultsFromJson(String str) => List<SearchResults>.from(json.decode(str).map((x) => SearchResults.fromJson(x)));
 
-String searchProductListToJson(List<SearchProductList> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String searchResultsToJson(List<SearchResults> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class SearchProductList {
+class SearchResults {
     int? id;
-    String? name;
-    int? price;
-    bool? isActive;
+    List<dynamic>? variations;
+    bool? inWishlist;
+    int? avgRating;
+    List<String>? images;
+    bool? variationExists;
+    int? salePrice;
+    List<Addon>? addons;
 
-    SearchProductList({
+    SearchResults({
         this.id,
-        this.name,
-        this.price,
-        this.isActive,
+        this.variations,
+        this.inWishlist,
+        this.avgRating,
+        this.images,
+        this.variationExists,
+        this.salePrice,
+        this.addons,
     });
 
-    factory SearchProductList.fromJson(Map<String, dynamic> json) => SearchProductList(
+    factory SearchResults.fromJson(Map<String, dynamic> json) => SearchResults(
         id: json["id"],
-        name: json["name"],
-        price: json["price"],
-        isActive: json["is_active"],
+        variations: json["variations"] == null ? [] : List<dynamic>.from(json["variations"]!.map((x) => x)),
+        inWishlist: json["in_wishlist"],
+        avgRating: json["avg_rating"],
+        images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+        variationExists: json["variation_exists"],
+        salePrice: json["sale_price"],
+        addons: json["addons"] == null ? [] : List<Addon>.from(json["addons"]!.map((x) => Addon.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
+        "variations": variations == null ? [] : List<dynamic>.from(variations!.map((x) => x)),
+        "in_wishlist": inWishlist,
+        "avg_rating": avgRating,
+        "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
+        "variation_exists": variationExists,
+        "sale_price": salePrice,
+        "addons": addons == null ? [] : List<dynamic>.from(addons!.map((x) => x.toJson())),
+    };
+}
+
+class Addon {
+    int? id;
+    int? price;
+    String? name;
+    String? description;
+    String? featuredImage;
+    int? stock;
+    bool? isActive;
+    int? taxRate;
+
+    Addon({
+        this.id,
+        this.price,
+        this.name,
+        this.description,
+        this.featuredImage,
+        this.stock,
+        this.isActive,
+        this.taxRate,
+    });
+
+    factory Addon.fromJson(Map<String, dynamic> json) => Addon(
+        id: json["id"],
+        price: json["price"],
+        name: json["name"],
+        description: json["description"],
+        featuredImage: json["featured_image"],
+        stock: json["stock"],
+        isActive: json["is_active"],
+        taxRate: json["tax_rate"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
         "price": price,
+        "name": name,
+        "description": description,
+        "featured_image": featuredImage,
+        "stock": stock,
         "is_active": isActive,
+        "tax_rate": taxRate,
     };
 }

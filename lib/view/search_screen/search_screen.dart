@@ -15,78 +15,73 @@ class SearchScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Search'),
         ),
-        body: Column(
-          children: [
-            // Search TextField
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: TextField(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              SearchBar(
                 controller: controller,
+                hintText: 'Search Here',
                 onChanged: (value) {
-                  viewModel.search(keyword: controller.text, context: context);
+                  viewModel.getSearchResults(
+                    keyword: value,
+                    context: context,
+                  );
                 },
-                decoration: InputDecoration(
-                  hintText: 'Search products...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                ),
               ),
-            ),
-
-            // Display loading indicator or search results
-            Expanded(
-              child: viewModel.isLoading
-                  ? const Center(
+              const SizedBox(height: 20),
+              Expanded(child: Builder(
+                builder: (context) {
+                  if (viewModel.isloading) {
+                    return Center(
                       child: CircularProgressIndicator(),
-                    )
-                  : viewModel.searchList.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No products found',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    );
+                  }
+                  if (viewModel.noResult) {
+                    return Center(
+                      child: Text('Sorry No reulst found'),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: viewModel.searchResults.length,
+                      itemBuilder: (context, index) {
+                        final data = viewModel.searchResults[index];
+                        return ListTile(
+                          leading: Image.network(
+                            data.images?.isNotEmpty == true
+                                ? data.images![0]
+                                : 'https://via.placeholder.com/150',
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
                           ),
-                        )
-                      : ListView.builder(
-                          itemCount: viewModel.searchList.length,
-                          itemBuilder: (context, index) {
-                            final product = viewModel.searchList[index];
-                            return ListTile(
-                              title: Text(product.name ?? 'Name not available'),
-                              subtitle: Text(
-                                product.price.toString(),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              trailing: Container(
-                                decoration: BoxDecoration(
-                                  color: (product.isActive ?? false)
-                                      ? Colors.green[200]
-                                      : Colors.red[200],
-                                  borderRadius: BorderRadius.circular(9),
-                                ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Text(
-                                    (product.isActive ?? false)
-                                        ? 'Active'
-                                        : 'Not active',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-            ),
-          ],
+                          title: Text(data.addons?.isNotEmpty == true
+                              ? data.addons![0].name ?? 'Name not available'
+                              : 'Name not available'),
+                          subtitle: Text(
+                            data.addons?.isNotEmpty == true
+                                ? data.addons![0].description ??
+                                    'No description available'
+                                : 'No description available',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Text(
+                            '₹${data.salePrice}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              )),
+            ],
+          ),
         ),
       ),
     );

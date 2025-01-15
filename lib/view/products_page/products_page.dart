@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,9 +7,11 @@ import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/products_controller.dart';
 import 'package:zybo_tech_interviewtask/controller/wishlist_controller.dart';
 import 'package:zybo_tech_interviewtask/utils/constants/string_constants.dart';
+import 'package:zybo_tech_interviewtask/utils/functions/shimmers.dart';
 import 'package:zybo_tech_interviewtask/view/login_page/login_page.dart';
 import 'package:zybo_tech_interviewtask/view/products_page/produst_details.dart';
 import 'package:zybo_tech_interviewtask/view/profile_page/profile_page.dart';
+import 'package:zybo_tech_interviewtask/view/search_screen/search_screen.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
@@ -29,14 +30,14 @@ class ProductsPage extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Popular Product'),
+            title: const Text('Popular Product'),
             backgroundColor: Colors.white,
             elevation: 0,
             foregroundColor: Colors.black,
             actions: [
               IconButton(
                 onPressed: () async {
-                  final secureStorage = FlutterSecureStorage();
+                  const secureStorage = FlutterSecureStorage();
                   await secureStorage.delete(key: StringConstants.token);
                   Navigator.pushAndRemoveUntil(
                     context,
@@ -44,33 +45,60 @@ class ProductsPage extends StatelessWidget {
                     (route) => false,
                   );
                 },
-                icon: Icon(Icons.logout),
+                icon: const Icon(Icons.logout),
               ),
               IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(),
-                        ));
-                  },
-                  icon: Icon(Icons.person))
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfilePage(),
+                      ));
+                },
+                icon: const Icon(Icons.person),
+              )
             ],
           ),
           body: viewModel.products.isEmpty
-              ? const Center(child: CircularProgressIndicator())
+              ? buildShimmerLoading()
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchScreen(),
+                                ));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 9),
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Search...'),
+                                  Icon(Icons.search)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                         viewModel.bannerProducts.isEmpty
-                            ? Center(child: CircularProgressIndicator())
+                            ? buildShimmerBanner()
                             : CarouselSlider.builder(
-                                itemCount: viewModel.bannerProducts.length,
+                                itemCount: 5,
                                 itemBuilder: (context, index, realIndex) {
-                                  final bannerProduct =
-                                      viewModel.bannerProducts[index];
                                   return Container(
                                     height: 100,
                                     width: double.infinity,
@@ -80,7 +108,8 @@ class ProductsPage extends StatelessWidget {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
                                       child: Image.network(
-                                        bannerProduct.imageUrl![0].toString(),
+                                        viewModel.products[index].images?[0] ??
+                                            'https://via.placeholder.com/150',
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -92,19 +121,20 @@ class ProductsPage extends StatelessWidget {
                                   height: 250,
                                 ),
                               ),
-                        SizedBox(height: 16),
-                        // Title
+                        const SizedBox(height: 16),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('Popular Product',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              )),
+                          child: const Text(
+                            'Popular Product',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         GridView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -129,7 +159,6 @@ class ProductsPage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Product Image with Favorite Icon
                                   Stack(
                                     children: [
                                       ClipRRect(
@@ -165,7 +194,6 @@ class ProductsPage extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 8),
-                                  // Product Name and Price
                                   Text(
                                     product.name ?? 'Product Name',
                                     style: GoogleFonts.poppins(fontSize: 14),
@@ -173,7 +201,6 @@ class ProductsPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
-                                    spacing: 9,
                                     children: [
                                       Stack(
                                         children: [
@@ -188,7 +215,7 @@ class ProductsPage extends StatelessWidget {
                                             top: 3,
                                             child: SizedBox(
                                               width: 50,
-                                              child: Divider(
+                                              child: const Divider(
                                                 thickness: 2,
                                                 color: Colors.black,
                                               ),

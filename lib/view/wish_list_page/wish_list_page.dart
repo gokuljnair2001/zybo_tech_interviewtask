@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/wishlist_data_controller.dart';
+import 'package:zybo_tech_interviewtask/utils/constants/asset_constants.dart';
 
 class WishListPage extends StatelessWidget {
   const WishListPage({super.key});
@@ -25,7 +26,27 @@ class WishListPage extends StatelessWidget {
               foregroundColor: Colors.black,
             ),
             body: viewModel.wishlistdata.isEmpty
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: Column(
+                    children: [
+                      Image(
+                        image: AssetImage(AssetConstants.noData),
+                      ),
+                      Text(
+                        'No Wishlist data found',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        "Can't get wishlist data due API Issue",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      )
+                    ],
+                  ))
                 : ListView.builder(
                     padding: EdgeInsets.all(12),
                     itemCount: viewModel.wishlistdata.length,

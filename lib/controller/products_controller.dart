@@ -27,6 +27,7 @@ class ProductsController extends BaseViewModel {
       var response = await http.get(Apis.bannerProducts);
       if (response.statusCode == 200) {
         bannerProducts = productsBannertModelFromJson(response.body);
+
       }
     } catch (e) {
       log(e.toString());

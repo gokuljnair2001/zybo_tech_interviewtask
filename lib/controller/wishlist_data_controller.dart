@@ -14,6 +14,8 @@ class WishlistDataController extends BaseViewModel {
         log("Data fetched successfully: ${response.body}");
         wishlistdata = wishlistFromJson(response.body);
         notifyListeners();
+      } else {
+        log(response.statusCode.toString());
       }
     } catch (e) {
       log("$e");

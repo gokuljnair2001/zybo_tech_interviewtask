@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/registration_controller.dart';
+import 'package:zybo_tech_interviewtask/utils/constants/string_constants.dart';
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});
@@ -110,10 +112,11 @@ class LogIn extends StatelessWidget {
                             context: context,
                           );
 
-                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          //   content: Text(
-                          //       'otp is ${viewModel.otpModel?.otp.toString()}'),
-                          // ));
+                          final preff=await SharedPreferences.getInstance();
+                          preff.setString(StringConstants.name, nameController.text);
+                          preff.setString(StringConstants.phoneNumber, controller.text);
+
+                     
                         }
                       },
                       style: ElevatedButton.styleFrom(
