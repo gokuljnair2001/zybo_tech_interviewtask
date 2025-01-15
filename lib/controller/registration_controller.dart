@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/api/apis.dart';
 import 'package:zybo_tech_interviewtask/model/otpModel.dart';
@@ -34,9 +32,11 @@ class RegistrationController extends BaseViewModel {
       if (response.statusCode == 200) {
         registrationModel = registrationModelFromJson(response.body);
         notifyListeners();
-        final preff = await SharedPreferences.getInstance();
-        preff.setString(
-            StringConstants.token, registrationModel!.token.toString());
+
+        final secureStorage = FlutterSecureStorage();
+        secureStorage.write(
+            key: StringConstants.token,
+            value: registrationModel!.token.toString());
 
         Navigator.push(
             context,

@@ -1,8 +1,9 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:zybo_tech_interviewtask/controller/products_controller.dart';
 import 'package:zybo_tech_interviewtask/controller/wishlist_controller.dart';
@@ -34,22 +35,17 @@ class ProductsPage extends StatelessWidget {
             foregroundColor: Colors.black,
             actions: [
               IconButton(
-                  onPressed: () async {
-                    final preff = await SharedPreferences.getInstance();
-
-                    preff.remove(StringConstants.token).then(
-                      (value) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LogIn(),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                    );
-                  },
-                  icon: Icon(Icons.logout)),
+                onPressed: () async {
+                  final secureStorage = FlutterSecureStorage();
+                  await secureStorage.delete(key: StringConstants.token);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LogIn()),
+                    (route) => false,
+                  );
+                },
+                icon: Icon(Icons.logout),
+              ),
               IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -84,12 +80,7 @@ class ProductsPage extends StatelessWidget {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
                                       child: Image.network(
-                                        bannerProduct.product?.images
-                                                    ?.isNotEmpty ==
-                                                true
-                                            ? bannerProduct
-                                                .product!.images!.first
-                                            : 'https://kerala.mallsmarket.com/sites/default/files/photos/events/LuLuMall-Kochi-LuLuOnSale2015-10-11Jan2015.jpg',
+                                        bannerProduct.imageUrl![0].toString(),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -156,7 +147,12 @@ class ProductsPage extends StatelessWidget {
                                         top: 8,
                                         right: 8,
                                         child: GestureDetector(
-                                          onTap: () {},
+                                          onTap: () {
+                                            proRead.addToWishlist(
+                                                context: context,
+                                                id: viewModel.products[index].id
+                                                    .toString());
+                                          },
                                           child: Icon(
                                             product.inWishlist == true
                                                 ? Icons.favorite

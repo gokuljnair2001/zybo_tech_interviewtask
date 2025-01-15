@@ -110,10 +110,10 @@ class LogIn extends StatelessWidget {
                             context: context,
                           );
 
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                'otp is ${viewModel.otpModel?.otp.toString()}'),
-                          ));
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //   content: Text(
+                          //       'otp is ${viewModel.otpModel?.otp.toString()}'),
+                          // ));
                         }
                       },
                       style: ElevatedButton.styleFrom(
