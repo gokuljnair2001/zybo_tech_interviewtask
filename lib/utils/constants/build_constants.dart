@@ -8,3 +8,4 @@ List<Widget> screenList=[
   WishListPage(),
   ProfilePage()
 ];
+

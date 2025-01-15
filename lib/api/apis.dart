@@ -18,4 +18,7 @@ class Apis {
       Uri.parse('https://admin.kushinirestaurant.com/api/wishlist/');
   static Uri getwishListData =
       Uri.parse('https://admin.kushinirestaurant.com/api/wishlist/');
+  static Uri profileurl =
+      Uri.parse('https://admin.kushinirestaurant.com/api/user-data/');
+
 }
